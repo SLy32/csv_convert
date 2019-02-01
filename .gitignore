@@ -1,0 +1,10 @@
+venv/
+.idea/
+input_data
+input_files
+output_data
+!input_files/.gitkeep
+!input_data/.gitkeep
+!output data/.gitkeep
+
+
