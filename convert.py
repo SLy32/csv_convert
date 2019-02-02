@@ -142,29 +142,30 @@ class Convert:
             row = self.lazy()
             with open(f"{self.output_file}", "w", newline='') as output_csv:
                 writer = csv.writer(output_csv, delimiter='\t')
+                xcount = 0
                 for count, item in enumerate(row):
-                    print(f"Row: {count}")
+                    # print(f"Row: {count}")
                     if count == 0:
                         data = item[0].split('\t')
-                        print(data)
+                        # print(data)
                         header = []
                         header.insert(0, 'chrom')
                         header.insert(1, 'pos')
                         header.insert(2, 'ref')
                         header.insert(3, 'alt')
                         header.extend(data)
-                        print(header)
+                        # print(header)
                         for i, item in enumerate(header):
                             if item == 'minor_AF':
                                 header.pop(i)
                                 header.insert(i, 'MAF')
-                        print(header)
+                        # print(header)
                         writer.writerow(header)
-                        print(len(header))
+                        # print(len(header))
                     else:
                         data = item[0].split('\t')
-                        print(len(data))
-                        print(data)
+                        # print(len(data))
+                        # print(data)
                         dtw = []
                         dt = data[0].split(':')
                         dtw.insert(0, dt[0])
@@ -173,9 +174,14 @@ class Convert:
                         dtw.insert(3, dt[3])
                         dtw.extend(data)
                         writer.writerow(dtw)
-                        print(len(dtw))
-                    if count > 5:
-                        break
+                        # print(len(dtw))
+                    xcount +=1
+                    if xcount > 1000000:
+                        print(count)
+                        xcount = 0
+                        # break
+            print(f"File size - {round(os.stat(self.output_file).st_size/1024/1024, 2)} Kb")
+
 
 if __name__ == "__main__":
     path_to = f"{os.path.dirname(os.path.abspath(__file__))}"

@@ -1,9 +1,9 @@
 venv/
 .idea/
+/input_data/*
+/output_data/*
 !input_data/.gitkeep
 !output_data/.gitkeep
-input_data
-output_data
 !input_files/.gitkeep
 input_files
 
