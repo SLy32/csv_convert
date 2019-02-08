@@ -86,25 +86,6 @@ class Convert:
                     if count > 1:
                         break
 
-
-        # with Profiler() as p:
-        #     with open(self.input_file, "w") as input_tsv:
-        #         with open(f"{self.output_file}", "w", newline='') as output_tsv:
-        #             writer = csv.writer(output_tsv, delimiter='\t')
-        #             r = csv.reader(input_tsv)
-        #             for count, row in enumerate(r):
-        #                 if count < 1:
-        #                     print(row[0])
-        #                     res = row[0].replace('minor_AF', 'MAF')
-        #                     res = res.replace('p_hwe', 'pval')
-        #                     print(res)
-        #                     writer.writerow(res)
-        #                 else:
-        #                     writer.writerow(row[0])
-        #                 if count > 10:
-        #                     break
-
-
     def short(self):
         with Profiler() as p:
             row = self.lazy()
@@ -159,6 +140,9 @@ class Convert:
                             if item == 'minor_AF':
                                 header.pop(i)
                                 header.insert(i, 'MAF')
+                            if item == 'p_hwe':
+                                header.pop(i)
+                                header.insert(i, 'pval')
                         # print(header)
                         writer.writerow(header)
                         # print(len(header))
@@ -175,17 +159,27 @@ class Convert:
                         dtw.extend(data)
                         writer.writerow(dtw)
                         # print(len(dtw))
-                    xcount +=1
+                    xcount += 1
                     if xcount > 1000000:
                         print(count)
                         xcount = 0
                         # break
             print(f"File size - {round(os.stat(self.output_file).st_size/1024/1024, 2)} Kb")
 
+    def panda_conv(self):
+        with Profiler() as p:
+            df = pd.read_csv(self.input_file, header=None, sep='\t')
+            # print(df)
+            for index, row in df.iterrows():
+                print(index, row)
+                if index > 10:
+                    break
+
 
 if __name__ == "__main__":
     path_to = f"{os.path.dirname(os.path.abspath(__file__))}"
-    file = 'age.gwas.imputed_v3.both_sexes.tsv'
+    file = '100007_irnt.gwas.imputed_v3.both_sexes.tsv/100007_irnt.gwas.imputed_v3.both_sexes.tsv'
     convert = Convert(file)
     print(path_to, file)
-    convert.full_copy()
+    # convert.full_copy()
+    convert.panda_conv()
